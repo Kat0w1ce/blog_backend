@@ -1,4 +1,5 @@
-use actix_web::{get, http, web, HttpRequest, HttpResponse, Responder};
+use actix_web::{get, http, post, web, HttpRequest, HttpResponse, Responder};
+use std::{fs, time};
 #[get("/")]
 pub async fn index(_req: HttpRequest) -> impl Responder {
     // Ok(HttpResponse::Ok().body("hello"))
@@ -7,7 +8,6 @@ pub async fn index(_req: HttpRequest) -> impl Responder {
 
 #[get("/artical/{filepath}")]
 pub async fn blog(_req: HttpRequest, web::Path(filepath): web::Path<String>) -> impl Responder {
-    use std::fs;
     println!("{}", filepath);
     let url = format! {"blog/{}",filepath};
     let artical =
@@ -15,4 +15,9 @@ pub async fn blog(_req: HttpRequest, web::Path(filepath): web::Path<String>) -> 
     HttpResponse::Ok()
         .header(http::header::CONTENT_TYPE, "text/html")
         .body(artical)
+}
+
+#[post("/artical")]
+async fn post_artical(_req: HttpRequest, filename: String) -> impl Responder {
+    "Ok"
 }
