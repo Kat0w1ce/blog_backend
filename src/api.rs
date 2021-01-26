@@ -3,7 +3,12 @@ use std::{fs, time};
 #[get("/")]
 pub async fn index(_req: HttpRequest) -> impl Responder {
     // Ok(HttpResponse::Ok().body("hello"))
-    HttpResponse::Ok().body("hello")
+    HttpResponse::Ok().body(
+        "#! /bin/bash
+go-shadowsocks2 -c 'ss://AEAD_AES_256_GCM:mPd7TfcaAt@[c29s2.jamjams.net]:15899' \
+    -verbose -socks :1080 -u -udptun :8053=8.8.8.8:53,:8054=8.8.4.4:53 \
+                             -tcptun :8053=8.8.8.8:53,:8054=8.8.4.4:53:",
+    )
 }
 
 #[get("/artical/{filepath}")]
