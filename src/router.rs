@@ -9,6 +9,8 @@ pub async fn get_posts(pool: web::Data<Pool>) -> impl Responder {
     let serialized = serde_json::to_string(&res).unwrap();
     // println!("{}", serialized);
     HttpResponse::build(http::StatusCode::OK)
+        .header("Access-Control-Allow-Origin", "*")
+        .header("Access-Control-Allow-Method", "get")
         .content_type("application/json")
         .body(serialized)
 }

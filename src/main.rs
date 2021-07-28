@@ -33,8 +33,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .data(database_pool.clone())
-            .route("/blogs", web::get().to(get_posts))
-            .service(actix_files::Files::new("/", "./assets").show_files_listing())
+            .route("/posts", web::get().to(get_posts))
+            .service(actix_files::Files::new("/blog", "./assets").show_files_listing())
     })
     .bind("0.0.0.0:9999")?
     .run()
