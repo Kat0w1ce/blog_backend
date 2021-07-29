@@ -5,6 +5,7 @@ pub mod router;
 #[macro_use]
 extern crate diesel;
 extern crate dotenv;
+
 extern crate r2d2;
 extern crate r2d2_diesel;
 extern crate serde;
@@ -14,7 +15,7 @@ use actix_files;
 use actix_web::{web, App, HttpServer, Responder};
 use diesel::SqliteConnection;
 use r2d2_diesel::ConnectionManager;
-use router::get_posts;
+use router::{get_posts, post};
 // use router::get_list;
 async fn index() -> impl Responder {
     // println!("hello");
@@ -34,6 +35,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .data(database_pool.clone())
             .route("/posts", web::get().to(get_posts))
+            .route("/upload", web::post().to(post))
             .service(actix_files::Files::new("/blog", "./assets").show_files_listing())
     })
     .bind("0.0.0.0:9999")?

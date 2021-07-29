@@ -17,7 +17,12 @@ pub fn establish_connection() -> SqliteConnection {
         .expect(&format!("Error connecting to {}", database_url))
 }
 
-pub fn create_post<'a>(conn: &SqliteConnection, title: &'a str, path: &'a str, intro: &'a str) {
+pub async fn create_post<'a>(
+    conn: &SqliteConnection,
+    title: &'a str,
+    path: &'a str,
+    intro: &'a str,
+) {
     use schema::posts;
     let newpost = Newpost { title, path, intro };
     diesel::insert_into(posts::table)
