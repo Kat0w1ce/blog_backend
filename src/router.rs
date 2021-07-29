@@ -2,14 +2,11 @@ pub use crate::db::models::Post;
 use crate::db::{self, get_list};
 use crate::Pool;
 use actix_multipart::Multipart;
-use actix_web::http::header::HttpDate;
 use actix_web::{http, web, HttpResponse, Responder};
 use futures::{StreamExt, TryStreamExt};
 use serde::Deserialize;
-use std::fmt::format;
 use std::fs;
 use std::io::Write;
-use std::os;
 pub async fn get_posts(pool: web::Data<Pool>) -> impl Responder {
     // let posts=g
     let conn = pool.get().expect("Error when getting conn from pool");
@@ -28,6 +25,7 @@ pub struct FileInfo {
     filename: String,
     title: String,
     path: String,
+    type_: String,
 }
 
 pub async fn post(
@@ -57,15 +55,15 @@ pub async fn post(
                 .unwrap();
         }
     }
-    let conn = pool.get().expect("Error when getting conn from pool");
-    use db::create_post;
-    let filepath = format!("{}/{}", query.path, query.filename);
-    create_post(&conn, &query.title, &filepath, "").await;
-    // "ok"
+    if query.type_ == String::from(".html") {
+        let conn = pool.get().expect("Error when getting conn from pool");
+        use db::create_post;
+        let filepath = format!("{}/{}", query.path, query.filename);
+        create_post(&conn, &query.title, &filepath, "").await;
+        // "ok"
+    }
     println!("uploaded");
     HttpResponse::Ok()
-        .header("Access-Control-Allow-Origin", "*")
-        .header("Access-Control-Allow-Method", "post")
         .content_type("multipart/form-data")
         .body("ok")
 }
